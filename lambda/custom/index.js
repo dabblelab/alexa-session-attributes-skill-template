@@ -2,19 +2,18 @@
 /* eslint-disable  no-console */
 
 const Alexa = require('ask-sdk');
-
+ 
 const LaunchRequestHandler = {
   canHandle(handlerInput) {
     return handlerInput.requestEnvelope.request.type === 'LaunchRequest';
   },
   handle(handlerInput) {
-    const speechText = 'Hello there. What is your name?';
+    const speechText = `Hello there. What's your name?`;
     const repromptText = 'Can you tell me your name?';
 
     return handlerInput.responseBuilder
       .speak(speechText)
       .reprompt(repromptText)
-      .withSimpleCard('Example Card Title', "Example card body content.")
       .getResponse();
   },
 };
@@ -27,21 +26,37 @@ const MyNameIsIntentHandler = {
   async handle(handlerInput) {
 
     const nameValue = handlerInput.requestEnvelope.request.intent.slots.name.value;
-    let speechText = `Hello ${nameValue}. It's nice to meet you.`;
+    let speechText = `Hello ${nameValue}. I saved your name as a session attribute. Ask me your name to make sure I have it.`;
 
     const attributesManager = handlerInput.attributesManager;
     const responseBuilder = handlerInput.responseBuilder;
 
-    const attributes = await attributesManager.getPersistentAttributes() || {};
-
-    if (Object.keys(attributes).length === 0) {
-      attributes.nameValue = nameValue;
-      attributesManager.setPersistentAttributes(attributes);
-      await attributesManager.savePersistentAttributes();
-    } else {
-      speechText = `I remember you... you told me your name was ${attributes.nameValue.toString()}.`;
-    }
+    const attributes = await attributesManager.getSessionAttributes() || {};
+    attributes.nameValue = nameValue;
+    attributesManager.setSessionAttributes(attributes);
     
+    return responseBuilder
+      .speak(speechText)
+      .reprompt(`Ask me your name.`)
+      .getResponse();
+  },
+};
+
+const SayNameIntentHandler = {
+  canHandle(handlerInput) {
+    return handlerInput.requestEnvelope.request.type === 'IntentRequest'
+      && handlerInput.requestEnvelope.request.intent.name === 'SayNameIntent';
+  },
+  async handle(handlerInput) {
+
+    const attributesManager = handlerInput.attributesManager;
+    const attributes = await attributesManager.getSessionAttributes() || {};
+
+    const nameValue = attributes.nameValue;
+    let speechText = `Your name is ${nameValue}.`;
+    
+    const responseBuilder = handlerInput.responseBuilder;
+
     return responseBuilder
       .speak(speechText)
       .getResponse();
@@ -54,7 +69,7 @@ const HelpIntentHandler = {
       && handlerInput.requestEnvelope.request.intent.name === 'AMAZON.HelpIntent';
   },
   handle(handlerInput) {
-    const speechText = 'You can introduce yourself by telling me your name';
+    const speechText = 'You can me your name';
 
     return handlerInput.responseBuilder
       .speak(speechText)
@@ -109,11 +124,10 @@ exports.handler = skillBuilder
   .addRequestHandlers(
     LaunchRequestHandler,
     MyNameIsIntentHandler,
+    SayNameIntentHandler,
     HelpIntentHandler,
     CancelAndStopIntentHandler,
     SessionEndedRequestHandler
   )
   .addErrorHandlers(ErrorHandler)
-  .withTableName('alexa-data')
-  .withAutoCreateTable(true)
   .lambda();
