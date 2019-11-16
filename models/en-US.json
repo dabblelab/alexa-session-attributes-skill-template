@@ -1,47 +1,52 @@
 {
-    "interactionModel": {
+  "interactionModel": {
       "languageModel": {
-        "invocationName": "attributes starter",
-        "types": [
-  
-        ],
-        "intents": [
-          {
-            "name": "AMAZON.CancelIntent",
-            "samples": [
-  
-            ]
-          },
-          {
-            "name": "AMAZON.HelpIntent",
-            "samples": [
-  
-            ]
-          },
-          {
-            "name": "AMAZON.StopIntent",
-            "samples": [
-  
-            ]
-          },
-          {
-            "name":"MyNameIsIntent",
-            "slots":[
-                {
-                    "name":"name",
-                    "type":"AMAZON.US_FIRST_NAME"
-                }
-            ],
-            "samples":[
-                "{name}",
-                "{name} is my name",
-                "my name is {name}",
-                "i am {name}",
-                "you can call me {name}"
-            ]
-        }
-        ]
+          "invocationName": "template four",
+          "intents": [
+              {
+                  "name": "AMAZON.NavigateHomeIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.CancelIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.HelpIntent",
+                  "samples": []
+              },
+              {
+                  "name": "AMAZON.StopIntent",
+                  "samples": []
+              },
+              {
+                  "name": "MyNameIsIntent",
+                  "slots": [
+                      {
+                          "name": "name",
+                          "type": "AMAZON.US_FIRST_NAME"
+                      }
+                  ],
+                  "samples": [
+                      "{name}",
+                      "{name} is my name",
+                      "my name is {name}",
+                      "i am {name}",
+                      "you can call me {name}"
+                  ]
+              },
+              {
+                  "name": "SayNameIntent",
+                  "slots": [],
+                  "samples": [
+                      "what's my name",
+                      "say my name",
+                      "tell me my name",
+                      "what is my name"
+                  ]
+              }
+          ],
+          "types": []
       }
-    }
   }
-  
+}
