@@ -1,5 +1,5 @@
 {
-  "name": "dabblelab-attributes-starter",
+  "name": "alexa-session-attributes-example-skill",
   "version": "1.0.0",
   "description": "Basic Alexa Skill Template for using Attributes",
   "main": "index.js",
